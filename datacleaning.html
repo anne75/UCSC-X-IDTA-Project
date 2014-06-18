@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title><em>Data Cleaning</em></title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+</head>
+
+<body>
+<h1><em>Data Cleaning</em></h1>
+
+<p>This the script for the data cleaning step of my analysis.</p>
+
+<h2>1. Ship positions</h2>
+
+<p>I combine 6 data sets to get a simple dataframe : position. Details below.</p>
+
+<pre><code class="r">##### Loading
+shipPos &lt;- list()
+i &lt;- 1
+fileExtension &lt;- c(&quot;A&quot;, &quot;E&quot;, &quot;O&quot;, &quot;S&quot;, &quot;Y&quot;, &quot;I&quot;)
+
+load3 &lt;- function(file) {
+    tempFile &lt;- read.table(file, sep = &quot;\t&quot;, quote = &quot;&quot;, fill = T, header = T, 
+        stringsAsFactors = F)
+    tempFile &lt;- tempFile[-which(tempFile$position == &quot;&quot;), -c(4, 5)]
+    return(tempFile)
+}
+
+for (letter in fileExtension) {
+    myfile &lt;- paste0(&quot;ship&quot;, letter)
+    myzip &lt;- paste0(&quot;../&quot;, myfile, &quot;.zip&quot;)
+    mytxt &lt;- paste0(myfile, &quot;.txt&quot;)
+    shipPos[[i]] &lt;- load3(unz(myzip, mytxt))
+    i &lt;- i + 1
+}
+AA &lt;- do.call(rbind, shipPos)
+AA2 &lt;- unique(AA)  # a data frame of 184 000 unique positions
+
+#### Cleaning : transform latitude and longitude into numbers and decimal
+#### degree units
+
+latlg &lt;- do.call(rbind, strsplit(AA2$position, &quot;, &quot;))
+
+f &lt;- function(x) gsub(&quot;&#39;&quot;, &quot;&quot;, x)
+latlg2 &lt;- apply(latlg, c(1, 2), FUN = f)
+
+f2 &lt;- function(x) strsplit(x, &quot;[ \\°]&quot;)
+library(&quot;plyr&quot;)
+lat &lt;- ldply(sapply(latlg2[, 1], FUN = f2))
+lg &lt;- ldply(sapply(latlg2[, 2], FUN = f2))
+lat &lt;- lat[, -1]
+lg &lt;- lg[, -1]
+
+convert &lt;- function(x) {
+    y &lt;- as.numeric(x[, 2]) + as.numeric(x[, 3])/60
+    y &lt;- ifelse((x[, 1] == &quot;S&quot;) | (x[, 1] == &quot;W&quot;), -y, y)
+}
+
+L &lt;- convert(lat)
+LL &lt;- convert(lg)
+position &lt;- data.frame(lat = L, long = LL)
+
+str(position)
+</code></pre>
+
+<pre><code>## &#39;data.frame&#39;:    183931 obs. of  2 variables:
+##  $ lat : num  51.33 23.1 40.08 51.95 1.18 ...
+##  $ long: num  3.82 113.45 120.03 5.37 103.87 ...
+</code></pre>
+
+<pre><code class="r">
+head(position, 3)
+</code></pre>
+
+<pre><code>##     lat    long
+## 1 51.33   3.817
+## 2 23.10 113.450
+## 3 40.08 120.033
+</code></pre>
+
+<pre><code class="r">
+tail(position, 3)
+</code></pre>
+
+<pre><code>##          lat   long
+## 183929 29.62 -94.95
+## 183930 25.45  52.35
+## 183931 18.13 -63.43
+</code></pre>
+
+<h2>2. Casualties</h2>
+
+<p>I combine 6 datasets in csv format (the transfomation from pdf to txt was automated with ocular and the txt to csv was done in python).</p>
+
+<ul>
+<li>pdf to txt</li>
+</ul>
+
+<p>In the txt format, the data concerning 1 accident are given on 3 rows with different fixed width format. I reshaped it on 1 row in the csv format.
+I select only the accidents were the position is given ( with latitude and longitude).</p>
+
+<pre><code>This is the code in python for one document, the code had to be tuned to each document
+
+import re
+import os
+import csv
+try:
+    from itertools import izip_longest  # added in Py 2.6
+except ImportError:
+    from itertools import zip_longest as izip_longest  # name change in Py 3.x
+try:
+    from itertools import accumulate  # added in Py 3.2
+except ImportError:
+    def accumulate(iterable):
+        &#39;Return running totals (simplified version).&#39;
+        total = next(iterable)
+        yield total
+        for value in iterable:
+            total += value
+            yield total
+
+##### LOGISTIC
+os.chdir(&#39;/home/anne/projet IDTA&#39;)
+
+filename = &#39;casualty2000.txt&#39;
+
+new_file = []
+
+pattern1  = &#39;^([A-Z]+[a-z]*){2,6}|Other&#39; #identify the first line
+pattern4 = &quot;[0-9]+o*[0-9]*\&#39;*[\\.]*[0-9]*[A-Z]&quot; #latitude and longitude pattern
+
+with open(filename, &#39;r&#39;) as f:
+   lines = f.readlines()
+
+##### FUN DEF
+def make_parser(fieldwidths):
+    cuts = tuple(cut for cut in accumulate(abs(fw) for fw in fieldwidths))
+    pads = tuple(fw &lt; 0 for fw in fieldwidths) # bool values for padding fields
+    flds = tuple(izip_longest(pads, (0,)+cuts, cuts))[:-1]  # ignore final one
+    parse = lambda line: tuple(line[i:j] for pad, i, j in flds if not pad)
+    # optional informational function attributes
+    parse.size = sum(abs(fw) for fw in fieldwidths)
+    parse.fmtstring = &#39; &#39;.join(&#39;{}{}&#39;.format(abs(fw), &#39;x&#39; if fw &lt; 0 else &#39;s&#39;)
+                                                for fw in fieldwidths)
+    return parse
+
+def parse_line(line,*args):  #parse the first line
+    parse = make_parser(args)
+    return parse(line)
+
+def parse_l23(line):         #parse the 2nd and 3rd line
+    if len(line)&lt;190 :
+        fields = (-7, 60, 8,-9,(len(line)-153),40) #143
+    else :
+        fields = (-7, 60, 8,-10,(len(line)-163),40)
+    fieldsL2 = parse_line(line,*fields)
+    return fieldsL2
+
+# Iterate each line
+for i in xrange(len(lines)):
+
+    # Regex applied to each line 
+    match = re.search(pattern1, lines[i]) # je cherche la classe
+    if match:
+        latLong=re.findall(pattern4, lines[i]) # je cherche s&#39;il y a la position
+        if len(latLong)&gt;1:
+            if len(lines[i])&lt;190 :
+                fields = (-7, 60, 8,10,(len(lines[i])-155),27,27,10,10)##143
+            else :
+                fields = (-7, 60, 8,11,(len(lines[i])-163),27,27,15,15)
+            fieldsL1 = parse_line(lines[i],*fields)    
+            fieldsL1 = (match.group(),)+fieldsL1
+
+            fieldsL2 = parse_l23(lines[i+1])
+
+            fieldsL3 = parse_l23(lines[i+2])
+
+            new_line=map(lambda x: x.strip(), list(fieldsL1+fieldsL2+fieldsL3))
+            new_file.append(new_line)
+
+#export
+with open(&#39;casualty2000clean.csv&#39;, &#39;w&#39;) as f:
+     # go to start of file
+     f.seek(0)
+     writer=csv.writer(f)
+     # actually write the lines
+     writer.writerows(new_file)
+</code></pre>
+
+<ul>
+<li>csv loading and cleaning</li>
+</ul>
+
+<p>My final output is the dataframe casualty, detailed below.</p>
+
+<pre><code class="r">shipAcc &lt;- list()
+i &lt;- 1
+
+fileExtension &lt;- c(&quot;1998&quot;, &quot;1999&quot;, &quot;2000&quot;, &quot;2001&quot;, &quot;2002&quot;, &quot;2003&quot;)
+cC &lt;- c(NA, &quot;character&quot;, &quot;NULL&quot;, rep(&quot;character&quot;, 6), rep(&quot;NULL&quot;, 2), &quot;character&quot;, 
+    &quot;NULL&quot;, &quot;character&quot;, &quot;numeric&quot;, &quot;character&quot;, &quot;NULL&quot;)
+
+for (letter in fileExtension) {
+    myfile &lt;- paste0(&quot;../casualty&quot;, letter, &quot;clean.csv&quot;)
+    shipAcc[[i]] &lt;- read.csv(myfile, stringsAsFactors = F, colClasses = cC, 
+        header = F)
+    i &lt;- i + 1
+}
+casualty &lt;- do.call(rbind, shipAcc)
+names(casualty) &lt;- c(&quot;dataSource&quot;, &quot;flagState&quot;, &quot;date&quot;, &quot;casLife&quot;, &quot;lat&quot;, &quot;long&quot;, 
+    &quot;fatalities&quot;, &quot;injuries&quot;, &quot;consequence&quot;, &quot;shipType&quot;, &quot;DOB&quot;, &quot;category&quot;)
+
+#### Cleaning, in feature order
+
+# dataSource: source of data. nothing to do
+
+# flagState: flag State
+cleanflag &lt;- function(x) {
+    x &lt;- toupper(x)
+    x[grepl(&quot;^CHINA&quot;, x)] &lt;- &quot;CHINA&quot;
+    x[grepl(&quot;^MARSHALL&quot;, x)] &lt;- &quot;MARSHALL ISLANDS&quot;
+    x &lt;- gsub(&quot;KINGDON&quot;, &quot;KINGDOM&quot;, x)
+    x &lt;- gsub(&quot;S REP$&quot;, &quot; REPUBLIC OF&quot;, x)
+    x &lt;- gsub(&quot; BARGUDA&quot;, &quot; BARBUDA&quot;, x)
+    x &lt;- gsub(&quot;VIET NAM&quot;, &quot;VIETNAM&quot;, x)
+    x &lt;- gsub(&quot;&amp;&quot;, &quot;AND&quot;, x)
+    x &lt;- gsub(&quot;NETHERLANDS,&quot;, &quot;NETHERLANDS&quot;, x)
+    return(x)
+}
+
+casualty$flagState &lt;- cleanflag(casualty$flagState)
+
+
+# date
+library(lubridate)
+dateclean &lt;- function(x) {
+    temp &lt;- dmy(x)
+    f3 &lt;- function(x) ifelse(x &lt; 2000, x + 1900, x)
+    year(temp) &lt;- sapply(year(temp), f3)
+    return(temp)
+}
+casualty$date &lt;- dateclean(casualty$date)
+
+
+# casLife (was someone injured or killed)
+temp1 &lt;- gsub(&quot; \\(.*\\)&quot;, &quot;&quot;, casualty$casLife)
+temp1 &lt;- gsub(&quot;Casualty&quot;, &quot;Serious casualty&quot;, temp1)
+
+casualty$casLife &lt;- as.factor(temp1)
+
+
+# lat and long: latitude and longitude
+fmin &lt;- function(x, pattern) {
+    y &lt;- ifelse(grepl(pattern, x), regmatches(x, regexec(pattern, x)), &quot;0&quot;)
+}
+library(plyr)
+
+convert2 &lt;- function(x) {
+    l1 &lt;- do.call(rbind, strsplit(x, &quot;o&quot;))
+    l2 &lt;- ldply(sapply(l1[, 2], fmin, &quot;^[0-9]+&quot;))[, 2]  #I need only the values, not any name
+    l3 &lt;- ldply(sapply(l1[, 2], fmin, &quot;\\.[0-9]+&quot;))[, 2]
+    l4 &lt;- ldply(sapply(l1[, 2], fmin, &quot;[A-Z]&quot;))[, 2]
+    l5 &lt;- as.numeric(l1[, 1]) + as.numeric(l2)/60 + as.numeric(l3)
+    l5 &lt;- ifelse((l4 == &quot;S&quot;) | (l4 == &quot;W&quot;), -l5, l5)
+    return(l5)
+}
+
+casualty$lat &lt;- convert2(casualty$lat)
+casualty$long &lt;- convert2(casualty$long)
+
+
+# fatalities and injuries
+casualty$fatalities &lt;- as.numeric(casualty$fatalities)
+</code></pre>
+
+<pre><code>## Warning: NAs introduced by coercion
+</code></pre>
+
+<pre><code class="r">casualty$injuries &lt;- as.numeric(casualty$injuries)
+</code></pre>
+
+<pre><code>## Warning: NAs introduced by coercion
+</code></pre>
+
+<pre><code class="r">
+
+# consequence : a consequence of the accident
+
+cleantype &lt;- function(x) {
+    bkdnwithshore &lt;- grepl(&quot;^B(.*)&quot;, x) &amp; !grepl(&quot;^B(.*)g&quot;, x)
+    x[bkdnwithshore] &lt;- &quot;Breakdown with shore assistance&quot;
+    x[grepl(&quot;^C(.*)&quot;, x)] &lt;- &quot;Constructive total loss&quot;
+    x &lt;- gsub(&quot; \\(.*\\)&quot;, &quot;&quot;, x)
+    x[grepl(&quot;[Hh]ull&quot;, x)] &lt;- &quot;Structural damage&quot;
+    x[grepl(&quot;Tot(.*)lif(.*)*&quot;, x)] &lt;- &quot;Total loss and loss of life&quot;
+    x[grepl(&quot;Tot(.*)shi(.*)*&quot;, x)] &lt;- &quot;Total loss&quot;
+    return(x)
+}
+
+casualty$consequence &lt;- cleantype(casualty$consequence)
+
+# shipType: type of ship
+
+cleanship &lt;- function(x) {
+    x &lt;- toupper(x)
+    x[grepl(&quot;BA(.*)&quot;, x)] &lt;- &quot;BARGE&quot;
+    x[grepl(&quot;BULK&quot;, x)] &lt;- &quot;BULK CARRIER&quot;
+    x[grepl(&quot;FISH&quot;, x)] &lt;- &quot;FISH RELATED SHIP&quot;
+    x[grepl(&quot;GAS &quot;, x)] &lt;- &quot;GAS CARRIER&quot;
+    x[grepl(&quot;ICE(.*) &quot;, x)] &lt;- &quot;ICEBREAKER&quot;
+    x[grepl(&quot;^RO(.*)&quot;, x)] &lt;- &quot;RO-RO CARGO SHIP&quot;
+    x[grepl(&quot;^TA(.*) &quot;, x)] &lt;- &quot;TANKER&quot;
+    x[grepl(&quot;TUG&quot;, x)] &lt;- &quot;TUG&quot;
+    x[grepl(&quot;^VEH(.*)&quot;, x)] &lt;- &quot;VEHICLES CARRIER&quot;
+    return(x)
+}
+
+casualty$shipType &lt;- cleanship(casualty$shipType)
+
+# DOB: year of construction, nothing
+
+
+# category: category of the accident
+
+cleancat &lt;- function(x) {
+    x[grepl(&quot;^Cap(.*)&quot;, x)] &lt;- &quot;Capsize&quot;
+    x[grepl(&quot;Fail(.*)&quot;, x)] &lt;- &quot;Hull failure&quot;
+    x[grepl(&quot;Fire and explosion&quot;, x)] &lt;- &quot;Fire/Explosion&quot;
+    grounding &lt;- grepl(&quot;Groun(.*)&quot;, x) | grepl(&quot;Stra(.*)&quot;, x)
+    x[grounding] &lt;- &quot;Grounding&quot;
+    x[grepl(&quot;Other(/|$)&quot;, x)] &lt;- &quot;Unknown&quot;
+    x[grepl(&quot;Work&quot;, x)] &lt;- &quot;Work-related accident&quot;
+    x[grepl(&quot;Fall&quot;, x)] &lt;- &quot;Fall overboard&quot;
+    return(x)
+}
+
+casualty$category &lt;- cleancat(casualty$category)
+
+str(casualty)
+</code></pre>
+
+<pre><code>## &#39;data.frame&#39;:    910 obs. of  12 variables:
+##  $ dataSource : chr  &quot;ILU&quot; &quot;SITREP&quot; &quot;SITREP&quot; &quot;LRS&quot; ...
+##  $ flagState  : chr  &quot;ANTIGUA AND BARBUDA&quot; &quot;ANTIGUA AND BARBUDA&quot; &quot;AUSTRALIA&quot; &quot;AUSTRIA&quot; ...
+##  $ date       : POSIXct, format: &quot;1998-06-27&quot; &quot;1998-04-13&quot; ...
+##  $ casLife    : Factor w/ 2 levels &quot;Serious casualty&quot;,..: 1 1 1 2 1 1 1 2 1 1 ...
+##  $ lat        : num  43.7 51 -65.5 35.1 50.3 ...
+##  $ long       : num  -9.12 1.62 144.47 -9.28 -1.55 ...
+##  $ fatalities : num  0 0 0 4 0 0 0 1 0 0 ...
+##  $ injuries   : num  0 0 0 0 0 0 0 1 0 0 ...
+##  $ consequence: chr  &quot;Constructive total loss&quot; &quot;Breakdown with towage&quot; &quot;Breakdown with towage&quot; &quot;Total loss and loss of life&quot; ...
+##  $ shipType   : chr  &quot;GENERAL CARGO SHIP&quot; &quot;GENERAL CARGO SHIP&quot; &quot;RESEARCH SHIP&quot; &quot;GENERAL CARGO SHIP&quot; ...
+##  $ DOB        : num  1989 1983 1990 1976 1973 ...
+##  $ category   : chr  &quot;Grounding&quot; &quot;Collision&quot; &quot;Fire/Explosion&quot; &quot;Hull failure&quot; ...
+</code></pre>
+
+<pre><code class="r">
+head(casualty, 3)
+</code></pre>
+
+<pre><code>##   dataSource           flagState       date          casLife    lat
+## 1        ILU ANTIGUA AND BARBUDA 1998-06-27 Serious casualty  43.70
+## 2     SITREP ANTIGUA AND BARBUDA 1998-04-13 Serious casualty  50.97
+## 3     SITREP           AUSTRALIA 1998-07-21 Serious casualty -65.48
+##      long fatalities injuries             consequence           shipType
+## 1  -9.117          0        0 Constructive total loss GENERAL CARGO SHIP
+## 2   1.617          0        0   Breakdown with towage GENERAL CARGO SHIP
+## 3 144.467          0        0   Breakdown with towage      RESEARCH SHIP
+##    DOB       category
+## 1 1989      Grounding
+## 2 1983      Collision
+## 3 1990 Fire/Explosion
+</code></pre>
+
+</body>
+
+</html>
+
