@@ -1,10 +1,20 @@
-setwd("../projet IDTA")
+####################
+#This are all the commands I used in my analysis
+# UCSC X IDTA Project
+#june 2014
+###################
+
+setwd("~/projet IDTA")
 rm(list=ls())
 library("ggplot2")
 library("ggmap")
 library("mapdata")
 library("lubridate")
+library("plyr") #always put before following
 library("dplyr")
+
+###################################################################################
+#Cleaning
 
 #######
 #Ship positions
@@ -24,7 +34,7 @@ load3<-function(file) {
 
 for (letter in fileExtension) {
   myfile<-paste0("ship",letter)
-  myzip<-paste0("../",myfile,".zip")
+  myzip<-paste0(myfile,".zip")
   mytxt<-paste0(myfile,".txt")
   shipPos[[i]]<-load3(unz(myzip, mytxt))
   i<-i+1
@@ -74,7 +84,7 @@ cC<-c(NA, "character","NULL",rep("character",6),rep("NULL",2), "character", "NUL
       "character", "numeric", "character", "NULL")
 
 for (letter in fileExtension) {
-  myfile<-paste0("../casualty",letter,"clean.csv")
+  myfile<-paste0("casualty",letter,"clean.csv")
   shipAcc[[i]]<-read.csv(myfile, stringsAsFactors=F, colClasses=cC, header=F)
   i<-i+1
 }
@@ -148,7 +158,6 @@ casualty$injuries<-as.numeric(casualty$injuries)
 
 
 #consequence
-
 cleantype<-function(x) {
   bkdnwithshore<-grepl("^B(.*)", x) & !grepl("^B(.*)g", x)
   x[bkdnwithshore]<-"Breakdown with shore assistance"
@@ -163,7 +172,6 @@ cleantype<-function(x) {
 casualty$consequence<-cleantype(casualty$consequence)
 
 #shipType
-
 cleanship<-function(x) {
   x<-toupper(x)
   x[grepl("BA(.*)",x)]<-"BARGE"
@@ -181,7 +189,7 @@ cleanship<-function(x) {
 casualty$shipType<-cleanship(casualty$shipType)
 
 #shipYear 
-
+#nothing
 
 #category
 
@@ -203,7 +211,8 @@ rm(AA,AA2,lat,latlg,latlg2,lg, L,LL,cC,fileExtension,i,letter,myfile,mytxt,myzip
 
 
 
-### *2.  Geographical Analysis*
+#####################################################
+#Geographical Analysis
 
 
 world_map <- borders("worldHires", colour="#99FF99" ,fill="#99FF99") # create a layer of borders
@@ -269,7 +278,7 @@ ggplot(data=heat, aes(x=longCut, y=latCut, fill=density))+geom_tile() +
 
 #Africa corn
 rs_cas<-casualty[casualty$latCut=="(0,18]" & casualty$longCut=="(36,54]",]
-table(rs_cas$consequence)
+rs_cas%.%group_by(consequence)%.%summarise(count=n())%.%arrange(desc(count))
 
 
 ### 3. Casualty Factors
