@@ -1,7 +1,6 @@
 ---
 title: "Ship Casualties Exploratory Analysis"
 output:
-  pdf_document: default
   html_document:
     highlight: zenburn
     theme: cosmo
@@ -445,11 +444,11 @@ Panama first position in the casualty set is put into perspective since this cou
 
   __3-  Date__
 
-This is what I could obtain by year:
+This is what I could obtain as number of casualties by year:
 ```{r, echo=FALSE }
 casualty%.%group_by("year"=year(date))%.%summarise(nb=n())
 ```
-From the pdf document, it appears 2003 has been a better year than the ones before, but most of all, more reports excluded the accident position.
+From the pdf document, it appears that even though 2003 has been a better year than the ones before, more reports excluded the accident position and were therefore excluded here.
 No pattern regarding the seasons could be seen.
 
   __4-  Fatalities and Injuries__
