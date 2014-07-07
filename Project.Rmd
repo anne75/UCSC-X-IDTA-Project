@@ -1,5 +1,6 @@
 ---
 title: "Ship Casualties Exploratory Analysis"
+author : "Anne Cognet"
 output:
   html_document:
     highlight: zenburn
